@@ -1,5 +1,7 @@
 import random
 import pygame
+import Ship_File
+
 
 
 class Rock(pygame.sprite.Sprite):
@@ -23,9 +25,9 @@ class Rock(pygame.sprite.Sprite):
         if not inflatedScreen.contains(self.rect):
             self.kill()
 
-    def isclicked(self):
-        if pygame.mouse.get_pressed()[0]:
-            if self.rect.collidepoint(pygame.mouse.get_pos()):
+    def isclicked(self,ship):
+        for i in ship.rel_points:
+            if self.rect.collidepoint(i):
                 return True
 
     def size(self):
@@ -42,7 +44,7 @@ class Rock(pygame.sprite.Sprite):
         return self.rect
 
 
-def Main_Loop(rockList,score,screen,screenWidth,screenheight,clock):
+def Main_Loop(rockList,score,screen,screenWidth,screenheight,clock,ship):
     # Always maintain total rock number on screen
     rockWeight = 0
     for rock in rockList:
@@ -93,7 +95,7 @@ def Main_Loop(rockList,score,screen,screenWidth,screenheight,clock):
 
     # Rock collision with bullets
     for rock in rockList:
-        if rock.isclicked():
+        if rock.isclicked(ship):
             if rock.size == "big":
                 currentRockPos = rock.coords()
                 rockList.remove(rock)
@@ -125,9 +127,9 @@ def Main_Loop(rockList,score,screen,screenWidth,screenheight,clock):
     rockList.draw(screen)
     pygame.display.flip()
 
-def newGame(screenWidth,screenheight,screen,rockList,score,clock):
+def newGame(screenWidth,screenheight,screen,rockList,score,clock,ship):
 
-        Main_Loop(rockList, score, screen, screenWidth, screenheight, clock)
+        Main_Loop(rockList, score, screen, screenWidth, screenheight, clock,ship)
 
 def main_setup(screenWidth,screenheight):
     # Set up screen for game

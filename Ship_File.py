@@ -155,17 +155,31 @@ class Ship:
             counter = 0
             if self.rel_points[i][0] > screen_size[0]:
                 counter += 1
+                for i in range(5):
+                    self.rel_points[i][0] -= 1
+                self.centre[0] -= 1
             if self.rel_points[i][0] < 0:
                 counter += 1
+                for i in range(5):
+                    self.rel_points[i][0] += 1
+                self.centre[0] += 1
             if self.rel_points[i][1] > screen_size[1]:
                 counter += 1
+                for i in range(5):
+                    self.rel_points[i][1] -= 1
+
+                self.centre[1] -= 1
             if self.rel_points[i][1] < 0:
                 counter += 1
+                for i in range(5):
+                    self.rel_points[i][1] += 1
+
+                self.centre[1] += 1
             if counter > 0:
                 on_screen += 1
 
         if on_screen > 0:
-            self.yspeed = 0-self.yspeed
+            self.yspeed = 0-(self.yspeed/2)
 
 
     def keep_on_screen(self):

@@ -27,8 +27,6 @@ def main_run():
                 gameRunning = False
         screen.fill((0, 0, 0))
         Ship_File.main_loop(screen,ship,clock)
-        asteroids.newGame(screenWidth,screenheight,screen,rockList,score,clock)
-        pygame.display.update()
-
+        asteroids.newGame(screenWidth,screenheight,screen,rockList,score,clock,ship)
 
 main_run()
