@@ -25,6 +25,8 @@ class Ship:
     __Rotation_Speed = 0
     __Speed = [0,0]
 
+    shot = []
+
     def __init__(self, position):
         self.position = list(position)
         self.velocity = [0.0, 0.0]
@@ -136,12 +138,6 @@ class Ship:
         dist = 1
         if key[pygame.K_LEFT]:
             self.xspeed -= 0.01
-
-
-
-
-
-
         elif key[pygame.K_RIGHT]:
             self.xspeed += 0.01
 
@@ -271,42 +267,26 @@ class Ship:
         if self.yspeed == 0.005 or self.yspeed == -0.005:
             self.yspeed = 0
 
-        if self.yspeed > 10:
-            self.yspeed = 10
+        if self.yspeed > 6:
+            self.yspeed = 6
 
-        if self.yspeed < -10:
-            self.yspeed = -10
+        if self.yspeed < -6:
+            self.yspeed = -6
 
-        if self.xspeed > 0.3:
-            self.xspeed = 0.3
+        if self.xspeed > 0.1:
+            self.xspeed = 0.1
 
-        if self.xspeed < -0.3:
-            self.xspeed = -0.3
+        if self.xspeed < -0.1:
+            self.xspeed = -0.1
 
     def Fire(self):
-        shot = Projectile()
+        self.shot.append(projectile.shot(self.get_angle(), 1, self.centre[0], self.centre[1]))
 
 
 
 
 
 
-class Projectile(Ship):
-
-    def __init__(self):
-        angle = ship.get_angle()
-        yspeed = ship.yspeed
-        rel_points = [[ship.rel_points[1]]]
-        pass
-
-    def draw(self,surface):
-        offset0 = self.rad_to_offset(ship.get_angle(), ship.yspeed)
-        offset1 = self.rad_to_offset(ship.get_angle(), ship.yspeed)
-        pygame.draw.line(surface, (255,255,255), self.rel_points[0], [self.rel_points[0][0] + offset0,self.rel_points[0][1] + offset1,], True)
-
-    def move(self):
-        self.rel_points[0] += self.rad_to_offset(self.angle, self.yspeed)[0]
-        self.centre[1] -= self.rad_to_offset(self.angle, self.yspeed)[1]
 
 
 import pygame, sys, time
@@ -316,6 +296,8 @@ import pygame
 import math
 import sys
 from math import *
+import projectile
+
 
 
 screen_size = [1300, 600]
@@ -331,13 +313,16 @@ def main_loop(screen,ship,clock):
     ship.edge()
     key = pygame.key.get_pressed()
 
+
     if key[pygame.K_SPACE]:
         ship.Fire()
-    try:
-        ship.shot.draw()
-        ship.shot.move()
-    except:
-        pass
+        print(ship.shot)
+        print("HI")
+
+    for i in range(len(ship.shot)):
+        screen.blit(ship.shot[i], (ship.centre[0], ship.centre[1]))
+        ship.shot[i].draw(screen)
+        ship.shot[i].move()
 
 
 

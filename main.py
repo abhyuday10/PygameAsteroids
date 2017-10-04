@@ -1,5 +1,5 @@
 import Ship_File
-import Shot
+
 import asteroids
 import os
 import pygame

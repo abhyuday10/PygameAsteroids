@@ -4,6 +4,7 @@ import Ship_File
 
 
 
+
 class Rock(pygame.sprite.Sprite):
     def __init__(self, position, size, speed=0):
         super().__init__()
