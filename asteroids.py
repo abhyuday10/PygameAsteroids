@@ -27,8 +27,8 @@ class Rock(pygame.sprite.Sprite):
             self.kill()
 
     def isclicked(self,ship):
-        for i in ship.rel_points:
-            if self.rect.collidepoint(i):
+        for i in range(len(ship.shot)):
+            if self.rect.collidepoint(ship.shot[i].get_pos()):
                 return True
 
     def size(self):

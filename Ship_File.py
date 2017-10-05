@@ -279,8 +279,11 @@ class Ship:
         if self.xspeed < -0.1:
             self.xspeed = -0.1
 
-    def Fire(self):
-        self.shot.append(projectile.shot(self.get_angle(), 1, self.centre[0], self.centre[1]))
+    def get_pos(self):
+        return self.centre
+
+    def Fire(self,screensize):
+        self.shot.append(Shot.projectile(self.get_angle(),self.get_pos(),screen_size[0],screen_size[1]))
 
 
 
@@ -288,7 +291,7 @@ class Ship:
 
 
 
-
+import copy
 import pygame, sys, time
 import os
 import random
@@ -296,16 +299,19 @@ import pygame
 import math
 import sys
 from math import *
-import projectile
+import Shot
 
 
 
 screen_size = [1300, 600]
 
+shot = []
+
 
 def main_loop(screen,ship,clock):
 
-
+    print(len(ship.shot))
+    print(len(ship.shot))
     ship.draw(screen)
     ship.move_y()
     ship.move_x()
@@ -315,14 +321,18 @@ def main_loop(screen,ship,clock):
 
 
     if key[pygame.K_SPACE]:
-        ship.Fire()
+        ship.Fire(screen_size)
         print(ship.shot)
         print("HI")
 
     for i in range(len(ship.shot)):
-        screen.blit(ship.shot[i], (ship.centre[0], ship.centre[1]))
-        ship.shot[i].draw(screen)
-        ship.shot[i].move()
+        try:
+            ship.shot[i].draw(screen)
+            ship.shot[i].move()
+            if ship.shot[i].on_screen() == False:
+                ship.shot.remove(ship.shot[i])
+        except:
+            pass
 
 
 

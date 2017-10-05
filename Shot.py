@@ -1,4 +1,6 @@
 from math import *
+import copy
+import os
 def rad_to_offset(radians, offset):  # insert better func name.
     x = cos(radians) * offset
     y = sin(radians) * offset
@@ -6,23 +8,50 @@ def rad_to_offset(radians, offset):  # insert better func name.
 
 import pygame
 class projectile:
-    def __init__(self,angle,position):
-        self.angle = angle
-        shot_position = position
-        second =[0,0]
-        second[0] = shot_position[0] + rad_to_offset(angle, 1)[0]
-        second[1] = shot_position[1] + rad_to_offset(angle, 1)[1]
-        self.point1 = position
-        self.point2 = second
-        print("AHHHHA",rad_to_offset(angle, 1)[1])
+    def __init__(self,angle,position,screenheight,screeenwidth):
+        self.screenheight = screenheight
+        self.screenwidth = screeenwidth
+        self.angle = copy.copy(angle)
+        self.point1 = copy.copy(position)
+        self.point2 = [position[0]+3,position[1]+3]
+        pass
+    #     self.angle = angle
+    #     shot_position = copy.copy(position)
+    #     second =[0,0]
+    #     second[0] = shot_position[0] + 1
+    #     second[1] = shot_position[0] + 1
+    #     #print(second)
+    #     self.point1 = position
+    #     self.point2 = second
+    #     #print(self.point1)
+    #     #print("AHHHHA",rad_to_offset(angle, 1)[0])
 
     def move(self):
-        self.point1[0] += rad_to_offset(self.angle, 1)[0]
-        self.point1[1] -= rad_to_offset(self.angle, 1)[1]
-        self.point2[0] += rad_to_offset(self.angle, 1)[0]
-        self.point2[1] -= rad_to_offset(self.angle, 1)[1]
+        pass
+        self.point1[0] += rad_to_offset(self.angle, 10)[0]
+        self.point1[1] -= rad_to_offset(self.angle, 10)[1]
+        self.point2[0] += rad_to_offset(self.angle, 10)[0]
+        self.point2[1] -= rad_to_offset(self.angle, 10)[1]
+
+    def get_pos(self):
+        return self.point1[0],self.point1[1]
 
     def draw(self,surface):
         pygame.draw.line(surface, (255, 255, 255), self.point1,self.point2, True)
+
+    def on_screen(self):
+        if self.point1[1]> self.screenheight:
+            return False
+        if self.point1[1]< 0:
+            return False
+
+        if self.point1[0]>self.screenwidth:
+            return False
+        if self.point1[0]<0:
+            return False
+
+        return True
+
+
 
 
