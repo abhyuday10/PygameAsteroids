@@ -311,7 +311,6 @@ shot = []
 def main_loop(screen,ship,clock):
 
     print(len(ship.shot))
-    print(len(ship.shot))
     ship.draw(screen)
     ship.move_y()
     ship.move_x()
@@ -321,19 +320,26 @@ def main_loop(screen,ship,clock):
 
 
     if key[pygame.K_SPACE]:
-        ship.Fire(screen_size)
-        print(ship.shot)
-        print("HI")
+        if len(ship.shot)<5:
+            ship.Fire(screen_size)
+            print(ship.shot)
+            print("HI")
+
 
     for i in range(len(ship.shot)):
         try:
             ship.shot[i].draw(screen)
             ship.shot[i].move()
-            if ship.shot[i].on_screen() == False:
-                ship.shot.remove(ship.shot[i])
         except:
             pass
-
+    for i in range(len(ship.shot)-1):
+        try:
+            if ship.shot[i].killcheck(screen) == True:
+                print("WTF")
+                del ship.shot[i]
+                print("IM DEAD")
+        except:
+            pass
 
 
     clock.tick(40)

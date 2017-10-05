@@ -13,7 +13,7 @@ class projectile:
         self.screenwidth = screeenwidth
         self.angle = copy.copy(angle)
         self.point1 = copy.copy(position)
-        self.point2 = [position[0]+3,position[1]+3]
+        self.point2 = [position[0]+ rad_to_offset(self.angle, 3)[0],position[1]-rad_to_offset(self.angle, 3)[1]]
         pass
     #     self.angle = angle
     #     shot_position = copy.copy(position)
@@ -39,11 +39,17 @@ class projectile:
     def draw(self,surface):
         pygame.draw.line(surface, (255, 255, 255), self.point1,self.point2, True)
 
+    def killcheck(self, screen):
+        inflatedScreen = screen.get_rect()
+        if not inflatedScreen.collidepoint(self.point1):
+            print("IM WIERDLY ALIVE?")
+            return True
+
     def on_screen(self):
         if self.point1[1]> self.screenheight:
-            return False
+            return True
         if self.point1[1]< 0:
-            return False
+            return True
 
         if self.point1[0]>self.screenwidth:
             return False

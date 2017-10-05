@@ -122,7 +122,7 @@ def Main_Loop(rockList,score,screen,screenWidth,screenheight,clock,ship):
     # display update and draw functions
     #clock.tick(60)
 
-    print(score)
+    #print(score)
 
     rockList.update()
     rockList.draw(screen)
