@@ -7,7 +7,7 @@ def rad_to_offset(radians, offset):  # insert better func name.
     return [x, y]
 
 import pygame
-class projectile:
+class projectile():
     def __init__(self,angle,position,screenheight,screeenwidth):
         self.screenheight = screenheight
         self.screenwidth = screeenwidth
@@ -42,7 +42,6 @@ class projectile:
     def killcheck(self, screen):
         inflatedScreen = screen.get_rect()
         if not inflatedScreen.collidepoint(self.point1):
-            print("IM WIERDLY ALIVE?")
             return True
 
     def on_screen(self):
@@ -57,7 +56,3 @@ class projectile:
             return False
 
         return True
-
-
-
-
