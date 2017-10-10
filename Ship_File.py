@@ -1,11 +1,6 @@
-
-
-
-
 def rotate(origin, point, angle):
     """
     Rotate a point counterclockwise by a given angle around a given origin.
-
     The angle should be given in radians.
     """
     ox, oy = origin
@@ -13,69 +8,26 @@ def rotate(origin, point, angle):
 
     qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
     qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
-    return (qx,qy)
+    return (qx, qy)
 
 
 
 class Ship:
-    thrust = 300.0
+    shot = []
 
-    _Position = [64,54]
-    _Orientation = 000
-    __Rotation_Speed = 0
-    __Speed = [0,0]
-
-    def __init__(self, position):
-        self.position = list(position)
-        self.velocity = [0.0, 0.0]
-
-        self.angle = 180.0
-
-        self.fire = 0.0
-        self.bullets = []
-
+    def __init__(self, x,y):
+        self.position = [x,y]
         # List of (angle,radius) pairs.
-        self.rel_points = [[(screen_size[0]/2)-25, (screen_size[1]/2)-25], [(screen_size[0]/2), (screen_size[1]/2)+25], [(screen_size[0]/2)+25, (screen_size[1]/2)-25], [(screen_size[0]/2), (screen_size[1]/2)-10],[(screen_size[0]/2)-25, (screen_size[1]/2)-25]]
-        self.centre = [screen_size[0]/2,screen_size[1]/2]
-        scale = 0.5
-        #for i in range(len(self.rel_points)):
-            #self.rel_points[i] = (math.radians(self.rel_points[i][0]), scale * self.rel_points[i][1])
+        self.rel_points = [[((screen_size[0]/2)-25), ((screen_size[1]/2)-25)], [((screen_size[0]/2)), ((screen_size[1]/2)+25)], [((screen_size[0]/2)+25), ((screen_size[1]/2)-25)], [((screen_size[0]/2)), ((screen_size[1]/2)-10)],[((screen_size[0]/2))-25, ((screen_size[1]/2)-25)]]
+        self.centre = [(screen_size[0]/2),(screen_size[1]/2)]
+        for i in range(len(self.rel_points)):
+          self.rel_points[i][0] =self.rel_points[i][0]+self.position[0]
+          self.rel_points[i][1] = self.rel_points[i][1] + self.position[1]
 
-        self.thrust_append = 0
+          self.centre = [(screen_size[0] / 2)+x, (screen_size[1] / 2)+y]
 
-        self.alive = True
-        self.dying = False
-        self.lives = 3
-        self.time_invincibility = 0
-
-        self.score = 0
         self.xspeed = 0
         self.yspeed = 0
-
-
-    #def __init__(self):
-     #   self.rect = pygame.Rect(20,20,0,0)
-    def get_collision(self,enemy_pos):
-        #Needs Position
-        pass
-
-    def shoot_projectile(self):
-        bullet = Projectile()
-        pass
-
-
-
-    def handle_keys(self):
-        key = pygame.key.get_pressed()
-        dist = 1
-        if key[pygame.K_LEFT]:
-           self.rect.move_ip(-1, 0)
-        if key[pygame.K_RIGHT]:
-           self.rect.move_ip(1, 0)
-        if key[pygame.K_UP]:
-           self.rect.move_ip(0, -1)
-        if key[pygame.K_DOWN]:
-           self.rect.move_ip(0, 1)
 
     def rad_to_offset(self,radians, offset):  # insert better func name.
         x = cos(radians) * offset
@@ -136,12 +88,6 @@ class Ship:
         dist = 1
         if key[pygame.K_LEFT]:
             self.xspeed -= 0.01
-
-
-
-
-
-
         elif key[pygame.K_RIGHT]:
             self.xspeed += 0.01
 
@@ -181,57 +127,6 @@ class Ship:
         if on_screen > 0:
             self.yspeed = 0-(self.yspeed/2)
 
-
-    def keep_on_screen(self):
-        on_screen = 0
-        for i in range(5):
-
-            counter = 0
-            if self.rel_points[i][0] > screen_size[0]:
-                counter += 1
-            if self.rel_points[i][0] < 0:
-                counter += 1
-            if self.rel_points[i][1] > screen_size[1]:
-                counter += 1
-            if self.rel_points[i][1] < 0:
-                counter += 1
-            if counter > 0:
-                on_screen += 1
-
-            #print (on_screen)
-
-        if on_screen > 0:
-            fake_points = [[0,0],[0,0],[0,0],[0,0],[0,0]]
-            for i in range(5):
-                if self.rel_points[i][0] < 0:
-                    fake_points[i][0] = self.rel_points[i][0] % screen_size[0]
-            for i in range(5):
-                fake_points[i][1] = self.rel_points[i][1] % screen_size[1]
-
-
-            print(fake_points)
-
-            for i in range(5):
-                if self.rel_points[i][0] > screen_size[0] and self.rel_points[i][1] > screen_size[1]:
-                    pygame.draw.line(screen, (255,255,255), fake_points[i], (0,0), True)
-                if self.rel_points[i][0] > screen_size[0] and self.rel_points[i][1] < 0:
-                    pygame.draw.line(screen, (255,255,255), fake_points[i], (0,screen_size[1]), True)
-
-                if self.rel_points[i][1] < 0 and self.rel_points[i][1] > screen_size[1]:
-                    pygame.draw.line(screen, (255,255,255), fake_points[i], (screen_size[0],0), True)
-                if self.rel_points[i][1] < 0 and self.rel_points[i][1] < 0:
-                    pygame.draw.line(screen, (255,255,255), fake_points[i], (screen_size[0],screen_size[1]), True)
-
-
-
-            pygame.draw.line(screen, (255,255,255), fake_points[i], fake_points[0], True)
-
-        if on_screen == 5:
-            for i in range(5):
-                for k in range(1):
-                    self.rel_points[i][k] = self.rel_points[i][k]% screen_size[k]
-
-
     def get_angle(self):
         #rel_points[i] + origin
         from math import atan2, degrees, pi
@@ -240,12 +135,6 @@ class Ship:
         rads = atan2(-dy, dx)
         rads %= 2 * pi
         return rads
-
-    def get_pos(self):
-        return self._Position
-
-    def update_pos(self):
-        self.rect = (self._Position[0],self._Position[1])
 
     def draw(self, surface):
         #print(self.rel_points)
@@ -271,44 +160,31 @@ class Ship:
         if self.yspeed == 0.005 or self.yspeed == -0.005:
             self.yspeed = 0
 
-        if self.yspeed > 10:
-            self.yspeed = 10
+        if self.yspeed > 6:
+            self.yspeed = 6
 
-        if self.yspeed < -10:
-            self.yspeed = -10
+        if self.yspeed < -6:
+            self.yspeed = -6
 
-        if self.xspeed > 0.3:
-            self.xspeed = 0.3
+        if self.xspeed > 0.1:
+            self.xspeed = 0.1
 
-        if self.xspeed < -0.3:
-            self.xspeed = -0.3
+        if self.xspeed < -0.1:
+            self.xspeed = -0.1
 
-    def Fire(self):
-        shot = Projectile()
+    def get_pos(self):
+        return self.centre
 
-
-
-
-
-
-class Projectile(Ship):
-
-    def __init__(self):
-        angle = ship.get_angle()
-        yspeed = ship.yspeed
-        rel_points = [[ship.rel_points[1]]]
-        pass
-
-    def draw(self,surface):
-        offset0 = self.rad_to_offset(ship.get_angle(), ship.yspeed)
-        offset1 = self.rad_to_offset(ship.get_angle(), ship.yspeed)
-        pygame.draw.line(surface, (255,255,255), self.rel_points[0], [self.rel_points[0][0] + offset0,self.rel_points[0][1] + offset1,], True)
-
-    def move(self):
-        self.rel_points[0] += self.rad_to_offset(self.angle, self.yspeed)[0]
-        self.centre[1] -= self.rad_to_offset(self.angle, self.yspeed)[1]
+    def Fire(self,screensize):
+        self.shot.append(Shot.projectile(self.get_angle(),self.get_pos(),screen_size[0],screen_size[1]))
 
 
+
+
+
+
+
+import copy
 import pygame, sys, time
 import os
 import random
@@ -316,14 +192,18 @@ import pygame
 import math
 import sys
 from math import *
+import Shot
+
 
 
 screen_size = [1300, 600]
 
+shot = []
+
 
 def main_loop(screen,ship,clock):
 
-
+    print(len(ship.shot))
     ship.draw(screen)
     ship.move_y()
     ship.move_x()
@@ -331,25 +211,35 @@ def main_loop(screen,ship,clock):
     ship.edge()
     key = pygame.key.get_pressed()
 
-    if key[pygame.K_SPACE]:
-        ship.Fire()
-    try:
-        ship.shot.draw()
-        ship.shot.move()
-    except:
-        pass
 
+    if key[pygame.K_SPACE]:
+        if len(ship.shot)<5:
+            ship.Fire(screen_size)
+            print(ship.shot)
+            print("HI")
+
+
+    for i in range(len(ship.shot)):
+        try:
+            ship.shot[i].draw(screen)
+            ship.shot[i].move()
+        except:
+            pass
+    for i in range(len(ship.shot)-1):
+        try:
+            if ship.shot[i].killcheck(screen) == True:
+                del ship.shot[i]
+        except:
+            pass
 
 
     clock.tick(40)
 
-def main_setup():
+def main_setup(x,y):
     pygame.init()
     clock = pygame.time.Clock()
-    ship = Ship([100, 100])
+    ship = Ship(x,y)
     return clock,ship
 
 def main(screen,clock,ship):
     main_loop(screen,ship,clock)
-
-
